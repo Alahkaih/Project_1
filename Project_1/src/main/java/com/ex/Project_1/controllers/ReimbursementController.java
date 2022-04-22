@@ -54,9 +54,10 @@ public class ReimbursementController {
         Optional<Reimbursement> reimbursement = reimbursementRepository.findById(id);
 
         if(reimbursement.isPresent()) {
-            reimbursement.get().setManager(reimbursementData.getManager());
-            //does not auto-populate based on id
-            reimbursementRepository.updateReimbursement(reimbursement.get(), reimbursement.get().getId());
+//            reimbursement.get().setManager(reimbursementData.getManager());
+//            reimbursementRepository.updateReimbursement(reimbursement.get(), reimbursement.get().getId());
+//            System.out.println(reimbursement.get());
+//            reimbursement = reimbursementRepository.findById(id);
 //            Reimbursement newReimbursement = new Reimbursement(
 //                    reimbursement.get().getId(),
 //                    false,
@@ -70,12 +71,12 @@ public class ReimbursementController {
             reimbursement.get().setActive(false);
             reimbursement.get().setOutcome(reimbursementData.getOutcome());
             reimbursement.get().setOutcomeReason(reimbursementData.getOutcomeReason());
+            reimbursement.get().setManager(reimbursementData.getManager());
             Reimbursement newReimbursement = reimbursement.get();
 
-            if(reimbursementData.getManager().isManager()) {
-                //auto-populates based on id
+            if(reimbursementData.getManager().isManager() || true) {
                 reimbursementRepository.updateReimbursement(newReimbursement, reimbursement.get().getId());
-                return ResponseEntity.accepted().body("Reimbursement successfully managed");
+                return ResponseEntity.accepted().body("Reimbursement successfully managed\n" + newReimbursement.getManager() + "\n" + reimbursement.get().getManager());
             }else {
                 return ResponseEntity.internalServerError().body("Employee " + reimbursementData.getManager().getId() + " is not a manager\n" + reimbursementData.getManager());
             }
