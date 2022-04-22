@@ -54,23 +54,26 @@ public class ReimbursementController {
         Optional<Reimbursement> reimbursement = reimbursementRepository.findById(id);
 
         if(reimbursement.isPresent()) {
-            Reimbursement newReimbursement = new Reimbursement(
-                    reimbursement.get().getId(),
-                    false,
-                    reimbursementData.getOutcome(),
-                    reimbursementData.getOutcomeReason(),
-                    reimbursement.get().getDescription(),
-                    reimbursement.get().getReimbursementAmount(),
-                    reimbursement.get().getEmployee(),
-                    reimbursementData.getManager()
-            );
-//            reimbursement.get().setActive(false);
-//            reimbursement.get().setOutcome(reimbursementData.getOutcome());
-//            reimbursement.get().setOutcomeReason(reimbursementData.getOutcomeReason());
-//            reimbursement.get().setManager(reimbursementData.getManager());
-//            newReimbursement = reimbursement.get();
+            reimbursement.get().setManager(reimbursementData.getManager());
+            //does not auto-populate based on id
+            reimbursementRepository.updateReimbursement(reimbursement.get(), reimbursement.get().getId());
+//            Reimbursement newReimbursement = new Reimbursement(
+//                    reimbursement.get().getId(),
+//                    false,
+//                    reimbursementData.getOutcome(),
+//                    reimbursementData.getOutcomeReason(),
+//                    reimbursement.get().getDescription(),
+//                    reimbursement.get().getReimbursementAmount(),
+//                    reimbursement.get().getEmployee(),
+//                    reimbursementData.getManager()
+//            );
+            reimbursement.get().setActive(false);
+            reimbursement.get().setOutcome(reimbursementData.getOutcome());
+            reimbursement.get().setOutcomeReason(reimbursementData.getOutcomeReason());
+            Reimbursement newReimbursement = reimbursement.get();
 
             if(reimbursementData.getManager().isManager()) {
+                //auto-populates based on id
                 reimbursementRepository.updateReimbursement(newReimbursement, reimbursement.get().getId());
                 return ResponseEntity.accepted().body("Reimbursement successfully managed");
             }else {
