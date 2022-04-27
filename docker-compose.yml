@@ -25,3 +25,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password1!
       - MYSQL_ROOT_USER=root
+  prom:
+    image: 'bitnami/prometheus'
+    container_name: prometheus
+    ports:
+      - "9000:9000"
