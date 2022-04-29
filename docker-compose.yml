@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   EmailAPI:
-    build: \Github_Repos\Project_1\Project_1_EmailAPI
+    build: Project_1_EmailAPI
     image: email_api:latest
     container_name: EmailAPI
     ports:
@@ -32,3 +32,8 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+  graf:
+    image: 'grafana/grafana'
+    container_name: grafana
+    ports:
+      - "3000:3000"

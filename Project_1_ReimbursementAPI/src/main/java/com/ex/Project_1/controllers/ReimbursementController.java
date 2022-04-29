@@ -1,6 +1,7 @@
 package com.ex.Project_1.controllers;
 
 import com.ex.Project_1.entities.Reimbursement;
+import com.ex.Project_1.exceptions.Reimbursements.ReimbursementNotFoundException;
 import com.ex.Project_1.repositories.ReimbursementRepository;
 import com.ex.Project_1.services.ReimbursementService;
 import lombok.Setter;
@@ -17,27 +18,26 @@ import java.util.Optional;
 public class ReimbursementController {
 
     @Setter(onMethod =@__({@Autowired}))
-    private ReimbursementRepository reimbursementRepository;
+    private ReimbursementService reimbursementService;
 
     @GetMapping
     public ResponseEntity getAllReimbursements() {
-        return ResponseEntity.ok(reimbursementRepository.findAll());
+        return ResponseEntity.ok(reimbursementService.getAllReimbursements());
     }
 
     @GetMapping("{id}")
     public ResponseEntity getReimbursementById(@PathVariable int id) {
-        Optional<Reimbursement> reimbursement = reimbursementRepository.findById(id);
-
-        if(reimbursement.isPresent()) {
-            return ResponseEntity.ok(reimbursement);
+        try {
+            return ResponseEntity.ok(reimbursementService.findReimbursementById(id));
+        } catch (ReimbursementNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     public ResponseEntity addNewReimbursement(@RequestBody Reimbursement reimbursement) {
         try {
-            reimbursementRepository.save(reimbursement);
+            reimbursementService.createNewReimbursement(reimbursement);
             return ResponseEntity.created(new URI("http://localhost/reimbursements/" + reimbursement.getId())).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,8 +46,8 @@ public class ReimbursementController {
     }
 
     @GetMapping("employees/{id}")
-    public ResponseEntity getAllReimbursementsById(@PathVariable int id) {
-        return ResponseEntity.ok(reimbursementRepository.findAllByEmployee_Id(id));
+    public ResponseEntity getAllReimbursementsByEmployeeId(@PathVariable int id) {
+        return ResponseEntity.ok(reimbursementService.findAllReimbursementsByEmployeeId(id));
     }
 
     @PutMapping("manage/{id}")

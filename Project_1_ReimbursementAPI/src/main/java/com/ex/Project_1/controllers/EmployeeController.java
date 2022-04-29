@@ -2,6 +2,7 @@ package com.ex.Project_1.controllers;
 
 import com.ex.Project_1.entities.Employee;
 import com.ex.Project_1.repositories.EmployeeRepository;
+import com.ex.Project_1.services.EmployeeService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,31 +16,27 @@ import java.util.Optional;
 @RequestMapping("employees")
 public class EmployeeController {
     @Setter(onMethod = @__({@Autowired}))
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
 
     @GetMapping
     public ResponseEntity getAllEmployees() {
-        return ResponseEntity.ok(employeeRepository.findAll());
+        return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
     @PostMapping
     public ResponseEntity addNewEmployee(@RequestBody Employee employee) {
         try {
-            employeeRepository.save(employee);
+            employeeService.createNewEmployee(employee);
             return ResponseEntity.created(new URI("http://localhost/employees/" + employee.getId())).build();
-        } catch (Exception e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error saving new employee");
+            return ResponseEntity.internalServerError().body("Error creating new employee");
         }
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteEmployee(@PathVariable int id) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        if(employee.isPresent()) {
-            employeeRepository.delete(employee.get());
-            return ResponseEntity.ok("Employee " + id + " was deleted.");
-        }
-        return ResponseEntity.internalServerError().body("Error deleting employee");
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.ok("Employee " + id + " was deleted.");
     }
 }
