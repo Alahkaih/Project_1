@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 
+/**
+ * Repository for storing emails in the database
+ */
 @Repository
 public interface EmailRepository extends JpaRepository<Email, Integer> {
     ArrayList<Email> findAllBySenderId(int sender_id);

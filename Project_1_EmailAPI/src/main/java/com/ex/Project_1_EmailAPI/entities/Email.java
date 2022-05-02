@@ -3,6 +3,9 @@ package com.ex.Project_1_EmailAPI.entities;
 import lombok.*;
 import javax.persistence.*;
 
+/**
+ * Email object
+ */
 @Entity
 @Table(name= "emails")
 @Getter

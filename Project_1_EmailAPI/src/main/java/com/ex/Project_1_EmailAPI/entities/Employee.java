@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * Employee object
+ */
 @Entity
 @Table(name= "Employees")
 @Getter

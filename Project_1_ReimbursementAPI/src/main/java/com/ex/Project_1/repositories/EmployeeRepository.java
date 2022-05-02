@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 
+/**
+ * Repository for storing Employees in the database
+ */
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 

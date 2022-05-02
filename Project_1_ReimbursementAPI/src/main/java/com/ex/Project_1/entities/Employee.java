@@ -5,6 +5,9 @@ import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 import javax.persistence.*;
 
+/**
+ * employee object
+ */
 @Entity
 @Table(name= "Employees")
 @Getter

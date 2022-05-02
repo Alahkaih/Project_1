@@ -12,6 +12,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
+/**
+ * This class handles web requests for employees
+ */
 @RestController
 @RequestMapping("employees")
 public class EmployeeController {

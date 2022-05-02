@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * reimbursement object
+ */
 @Entity
 @Table(name= "reimbursements")
 @Getter

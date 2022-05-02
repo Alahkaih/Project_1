@@ -2,6 +2,7 @@ package com.ex.Project_1_EmailAPI.controllers;
 
 import com.ex.Project_1_EmailAPI.entities.Email;
 import com.ex.Project_1_EmailAPI.repositories.EmailRepository;
+import com.ex.Project_1_EmailAPI.services.EmailService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,31 +12,34 @@ import javax.xml.ws.Response;
 import java.net.URI;
 import java.util.Optional;
 
+/**
+ * This class handles web requests for emails
+ */
 @RestController
 @RequestMapping("emails")
 public class EmailController {
     @Setter(onMethod =@__({@Autowired}))
-    private EmailRepository emailRepository;
+    private EmailService emailService;
 
     @GetMapping
     public ResponseEntity getAllEmails() {
-        return ResponseEntity.ok(emailRepository.findAll());
+        return ResponseEntity.ok(emailService.getAllEmails());
     }
 
     @GetMapping("sender/{id}")
     public ResponseEntity getAllEmailsBySenderId(@PathVariable int id) {
-        return ResponseEntity.ok(emailRepository.findAllBySenderId(id));
+        return ResponseEntity.ok(emailService.getAllEmailsBySenderId(id));
     }
 
     @GetMapping("receiver/{id}")
     public ResponseEntity getAllEmailsByReceiverId(@PathVariable int id) {
-        return ResponseEntity.ok(emailRepository.findAllByReceiverId(id));
+        return ResponseEntity.ok(emailService.getAllEmailsByReceiverId(id));
     }
 
     @PostMapping
     public ResponseEntity addNewEmail(@RequestBody Email email) {
         try {
-            emailRepository.save(email);
+            emailService.createNewEmail(email);
             return ResponseEntity.created(new URI("http://localhost/emails/" + email.getId())).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,11 +49,12 @@ public class EmailController {
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteEmail(@PathVariable int id) {
-        Optional<Email> email = emailRepository.findById(id);
-        if(email.isPresent()) {
-            emailRepository.delete(email.get());
-            return ResponseEntity.ok("Email " + id + " was deleted.");
+        try {
+            emailService.deleteEmail(id);
+            return ResponseEntity.ok("Email " + id + " was deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Error deleting email");
         }
-        return ResponseEntity.internalServerError().body("Error deleting email");
     }
 }

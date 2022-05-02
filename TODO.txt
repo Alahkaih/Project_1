@@ -8,4 +8,17 @@ Emails:
     LOGGING
     JAVADOCS
     TESTING
-    MOVE FUNCTIONALITY TO SERVICE CLASS
+        -create new email
+            -happy path
+            -null receiver
+            -null sender
+        -delete email
+            -happy path
+            -null email
+        -get emails sent
+            -happy path
+            -no sent emails
+        -get emails received
+            -happy path
+            -no received emails
+

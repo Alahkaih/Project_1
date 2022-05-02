@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 
+/**
+ * Repository for storing Reimbursements in the database
+ */
 @Repository
 public interface ReimbursementRepository extends JpaRepository<Reimbursement, Integer> {
 

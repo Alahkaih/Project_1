@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Optional;
 
+/**
+ * This class handles web requests for reimbursements
+ */
 @RestController
 @RequestMapping("reimbursements")
 public class ReimbursementController {
