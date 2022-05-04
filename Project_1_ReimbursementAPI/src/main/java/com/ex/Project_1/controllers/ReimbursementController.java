@@ -54,38 +54,11 @@ public class ReimbursementController {
     }
 
     @PutMapping("manage/{id}")
-    public ResponseEntity manageReimbursement(@PathVariable int id, @RequestBody Reimbursement reimbursementData) {
-        Optional<Reimbursement> reimbursement = reimbursementRepository.findById(id);
-
-        if(reimbursement.isPresent()) {
-//            reimbursement.get().setManager(reimbursementData.getManager());
-//            reimbursementRepository.updateReimbursement(reimbursement.get(), reimbursement.get().getId());
-//            System.out.println(reimbursement.get());
-//            reimbursement = reimbursementRepository.findById(id);
-//            Reimbursement newReimbursement = new Reimbursement(
-//                    reimbursement.get().getId(),
-//                    false,
-//                    reimbursementData.getOutcome(),
-//                    reimbursementData.getOutcomeReason(),
-//                    reimbursement.get().getDescription(),
-//                    reimbursement.get().getReimbursementAmount(),
-//                    reimbursement.get().getEmployee(),
-//                    reimbursementData.getManager()
-//            );
-            reimbursement.get().setActive(false);
-            reimbursement.get().setOutcome(reimbursementData.getOutcome());
-            reimbursement.get().setOutcomeReason(reimbursementData.getOutcomeReason());
-            reimbursement.get().setManager(reimbursementData.getManager());
-            Reimbursement newReimbursement = reimbursement.get();
-
-            if(reimbursementData.getManager().isManager() || true) {
-                reimbursementRepository.updateReimbursement(newReimbursement, reimbursement.get().getId());
-                return ResponseEntity.accepted().body("Reimbursement successfully managed\n" + newReimbursement.getManager() + "\n" + reimbursement.get().getManager());
-            }else {
-                return ResponseEntity.internalServerError().body("Employee " + reimbursementData.getManager().getId() + " is not a manager\n" + reimbursementData.getManager());
-            }
+    public ResponseEntity manageReimbursement(@RequestBody Reimbursement reimbursementData, @PathVariable int id) {
+        if(reimbursementService.updateReimbursement(reimbursementData, id)) {
+            return ResponseEntity.internalServerError().body("Employee " + reimbursementData.getManager().getId() + " is not a manager\n" + reimbursementData.getManager());
+        } else {
+            return ResponseEntity.internalServerError().body("Error managing reimbursement");
         }
-        return ResponseEntity.internalServerError().body("Error managing reimbursement");
-
     }
 }

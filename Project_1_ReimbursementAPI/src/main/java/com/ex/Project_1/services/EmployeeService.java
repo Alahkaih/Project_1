@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.Optional;
 /**
  * Service layer between the repository and controller
  */
+@Service
 public class EmployeeService {
 
     @Setter(onMethod = @__({@Autowired}))
@@ -56,7 +58,7 @@ public class EmployeeService {
     /**
      * Deletes employee by their id
      * @param id employee's id
-     * @throws NullPointerException
+     * @throws NullPointerException for user not found
      */
     public void deleteEmployee(int id) throws NullPointerException{
         logger.debug("Attempting to delete employee with id: " + id);

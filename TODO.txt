@@ -1,12 +1,14 @@
 Reimbursements:
-    LOGGING
-    JAVADOCS
+    FUNCTIONALITY
+        -Send Emails on reimbursement request, approval, denial//
+    LOGGING//
+    JAVADOCS//
     TESTING
-    FIX UPDATE REIMBURSEMENT
+    FIX UPDATE REIMBURSEMENT//
     FIX ACTIVE FROM DEFAULTING TO FALSE
 Emails:
-    LOGGING
-    JAVADOCS
+    LOGGING//
+    JAVADOCS//
     TESTING
         -create new email
             -happy path
@@ -22,3 +24,6 @@ Emails:
             -happy path
             -no received emails
 
+Spring Web RestTemplate:
+    Send Emails in ReimbursementAPI//
+    Verify Employees in EmailAPI//

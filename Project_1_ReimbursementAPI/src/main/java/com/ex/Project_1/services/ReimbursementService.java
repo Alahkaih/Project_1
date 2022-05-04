@@ -1,26 +1,38 @@
 package com.ex.Project_1.services;
 
+import com.ex.Project_1.entities.Email;
 import com.ex.Project_1.entities.Employee;
 import com.ex.Project_1.entities.Reimbursement;
 import com.ex.Project_1.exceptions.Employees.EmployeeRepositoryEmptyException;
 import com.ex.Project_1.exceptions.Employees.NullPasswordException;
 import com.ex.Project_1.exceptions.Reimbursements.*;
 import com.ex.Project_1.repositories.ReimbursementRepository;
+import lombok.Data;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Service layer between the repository and controller
  */
+@Service
 public class ReimbursementService {
 
     @Setter(onMethod =@__({@Autowired}))
     private ReimbursementRepository reimbursementRepository;
+
+
+    private EmployeeService employeeService;
     final Logger logger = LoggerFactory.getLogger(Reimbursement.class);
 
     public void createNewReimbursement(Reimbursement reimbursement) throws  NullDescriptionException,
@@ -36,14 +48,17 @@ public class ReimbursementService {
         } else if(reimbursement.getDescription().length() > 50) {
             logger.debug("Failed to create new reimbursement: Long Description");
             throw new LongDescriptionException("Your description can't be longer than 50 characters");
-        } else if(reimbursement.getOutcome().length() > 20) {
-            logger.debug("Failed to create new reimbursement: Long outcome");
-            throw new LongOutcomeException("Your outcome can't be longer than 20 characters");
-        } else if(reimbursement.getOutcomeReason().length() > 200) {
-            logger.debug("Failed to create new reimbursement: Long outcome reason");
-            throw new LongOutcomeReasonException("Your outcome reason can't be longer than 200 characters");
         } else {
             reimbursementRepository.save(reimbursement);
+            sendEmail(
+                    9,
+                    reimbursement.getEmployee().getId(),
+                    "Reimbursement received",
+                    "This is confirmation for your reimbursement of " +
+                            reimbursement.getReimbursementAmount() +
+                            " for " +
+                            reimbursement.getDescription()
+            );
             logger.debug("Successfully created new reimbursement");
         }
     }
@@ -96,8 +111,37 @@ public class ReimbursementService {
 
     }
 
-    public void updateReimbursement(int id) {
+    public boolean updateReimbursement(Reimbursement newReimbursement, int id) {
         logger.debug("Attempting to update reimbursement");
+        if(employeeService.findEmployeeById(newReimbursement.getManager().getId()).isManager()) {
+            reimbursementRepository.updateReimbursement(newReimbursement, id);
+            sendEmail(
+                    newReimbursement.getManager().getId(),
+                    newReimbursement.getEmployee().getId(),
+                    "Reimbursement status: " + newReimbursement.getOutcome(),
+                    newReimbursement.getOutcomeReason()
+            );
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public void reassignReimbursement(int reimbursementId, int newEmployeeId) {
+        Reimbursement tempReimbursement = findReimbursementById(reimbursementId);
+        tempReimbursement.setEmployee(employeeService.findEmployeeById(newEmployeeId));
+        updateReimbursement(tempReimbursement, reimbursementId);
+    }
+
+    public void sendEmail(int managerId, int employeeId, String subject, String body) {
+        String URL = "http://localhost:8000/emails";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Email> request = new HttpEntity<Email>(new Email(
+                body,
+                subject,
+                employeeService.findEmployeeById(managerId),
+                employeeService.findEmployeeById(employeeId)
+        ));
+        restTemplate.exchange(URL, HttpMethod.POST, request, Email.class);
     }
 }
