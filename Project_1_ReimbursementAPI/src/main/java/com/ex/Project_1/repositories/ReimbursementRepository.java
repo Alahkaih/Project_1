@@ -4,6 +4,7 @@ import com.ex.Project_1.entities.Reimbursement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,6 @@ public interface ReimbursementRepository extends JpaRepository<Reimbursement, In
 
     @Transactional
     @Modifying
-    @Query("update Reimbursement r set r = ?1 where r.id = ?2")
-    public void updateReimbursement(Reimbursement reimbursement, int id);
+    @Query("update Reimbursement r set r = :reimbursement where r.id = :id")
+    public void updateReimbursement(@Param("reimbursement") Reimbursement reimbursement, @Param("id") int id);
 }

@@ -1,5 +1,6 @@
 package com.ex.Project_1.controllers;
 
+import com.ex.Project_1.entities.Employee;
 import com.ex.Project_1.entities.Reimbursement;
 import com.ex.Project_1.exceptions.Reimbursements.ReimbursementNotFoundException;
 import com.ex.Project_1.repositories.ReimbursementRepository;
@@ -53,12 +54,19 @@ public class ReimbursementController {
         return ResponseEntity.ok(reimbursementService.findAllReimbursementsByEmployeeId(id));
     }
 
+    //TODO Passing but not updating anything
     @PutMapping("manage/{id}")
     public ResponseEntity manageReimbursement(@RequestBody Reimbursement reimbursementData, @PathVariable int id) {
         if(reimbursementService.updateReimbursement(reimbursementData, id)) {
-            return ResponseEntity.internalServerError().body("Employee " + reimbursementData.getManager().getId() + " is not a manager\n" + reimbursementData.getManager());
+            return ResponseEntity.ok("Reimbursement successfully updated\n\n" + reimbursementService.findReimbursementById(id));
         } else {
             return ResponseEntity.internalServerError().body("Error managing reimbursement");
         }
+    }
+
+    @PutMapping("reassign/{id}")
+    public ResponseEntity reassignReimbursement(@RequestBody Employee employee, @PathVariable int id) {
+        reimbursementService.reassignReimbursement(id, employee.getId());
+        return ResponseEntity.ok("Reimbursement " + id + " successfully reassigned to employee " + employee.getId());
     }
 }

@@ -1,3 +1,0 @@
-Ask August about my manage reimbursement function in ReimbursementController
-    Manager is not auto-populating based on manager id
-    employee auto-populates based on id when generating reimbursement
