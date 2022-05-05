@@ -1,7 +1,6 @@
 package com.ex.Project_1.entities;
 
 import lombok.*;
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 import javax.persistence.*;
 

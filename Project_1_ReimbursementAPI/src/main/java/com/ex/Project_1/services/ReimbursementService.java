@@ -1,25 +1,15 @@
 package com.ex.Project_1.services;
 
-import com.ex.Project_1.entities.Email;
 import com.ex.Project_1.entities.Employee;
 import com.ex.Project_1.entities.Reimbursement;
-import com.ex.Project_1.exceptions.Employees.EmployeeRepositoryEmptyException;
-import com.ex.Project_1.exceptions.Employees.NullPasswordException;
 import com.ex.Project_1.exceptions.Reimbursements.*;
 import com.ex.Project_1.repositories.ReimbursementRepository;
-import com.sun.xml.bind.v2.TODO;
-import lombok.Data;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +25,16 @@ public class ReimbursementService {
     @Setter(onMethod =@__({@Autowired}))
     private EmployeeService employeeService;
 
+    @Setter(onMethod =@__({@Autowired}))
+    private RestTemplateEmailService restTemplateEmailService;
+
     final Logger logger = LoggerFactory.getLogger(Reimbursement.class);
 
-    public void createNewReimbursement(Reimbursement reimbursement) throws  NullDescriptionException,
+    public Reimbursement createNewReimbursement(Reimbursement reimbursement) throws  NullDescriptionException,
                                                                             NullEmployeeException, LongDescriptionException,
                                                                             LongOutcomeException, LongOutcomeReasonException {
         logger.info("Attempting to create new reimbursement");
-        if(reimbursement.getDescription().isEmpty()) {
+        if(reimbursement.getDescription() == null) {
             logger.info("Failed to create new reimbursement: Null Description");
             throw new NullDescriptionException("Your description can't be empty");
         } else if(reimbursement.getEmployee() == null) {
@@ -51,7 +44,7 @@ public class ReimbursementService {
             logger.info("Failed to create new reimbursement: Long Description");
             throw new LongDescriptionException("Your description can't be longer than 50 characters");
         } else {
-            reimbursementRepository.save(reimbursement);
+            Reimbursement newReimbursement = reimbursementRepository.save(reimbursement);
             sendEmail(
                     9,
                     reimbursement.getEmployee().getId(),
@@ -62,6 +55,7 @@ public class ReimbursementService {
                             reimbursement.getDescription()
             );
             logger.info("Successfully created new reimbursement");
+            return newReimbursement;
         }
     }
 
@@ -104,7 +98,6 @@ public class ReimbursementService {
         logger.info("Attempting to find all reimbursements for employee " + id);
         if(reimbursementRepository.findAllByEmployee_Id(id).isEmpty()) {
             logger.info("Employee " + id + " has no reimbursements");
-
             throw new NullPointerException("This employee has no reimbursements");
         } else {
             logger.info("Successfully found reimbursements for employee " + id);
@@ -148,14 +141,11 @@ public class ReimbursementService {
     }
 
     public void sendEmail(int managerId, int employeeId, String subject, String body) {
-        String URL = "http://EmailAPI:8000/emails";
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Email> request = new HttpEntity<Email>(new Email(
-                body,
-                subject,
+        restTemplateEmailService.sendEmail(
                 employeeService.findEmployeeById(managerId),
-                employeeService.findEmployeeById(employeeId)
-        ));
-        restTemplate.exchange(URL, HttpMethod.POST, request, Email.class);
+                employeeService.findEmployeeById(employeeId),
+                subject,
+                body
+        );
     }
 }

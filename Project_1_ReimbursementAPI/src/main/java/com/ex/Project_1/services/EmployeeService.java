@@ -25,13 +25,13 @@ public class EmployeeService {
     public void createNewEmployee(Employee employee) throws NullUsernameException, LongUsernameException,
                                                             NullPasswordException, LongPasswordException {
         logger.info("Attempting to create a new employee");
-        if(employee.getUsername().isEmpty()) {
+        if(employee.getUsername() == null) {
             logger.info("Failed to create new employee: Null Username");
             throw new NullUsernameException("You can't have a null username");
         } else if(employee.getUsername().length() > 20) {
             logger.info("Failed to create new employee: Long Username");
             throw new LongUsernameException("Your username needs to be 20 or less characters");
-        } else if(employee.getPassword().isEmpty()) {
+        } else if(employee.getPassword() == null) {
             logger.info("Failed to create new employee: Null Password");
             throw new NullPasswordException("You can't have a null password");
         } else if(employee.getPassword().length() > 20) {

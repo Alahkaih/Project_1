@@ -1,17 +1,14 @@
 package com.ex.Project_1.controllers;
 
 import com.ex.Project_1.entities.Employee;
-import com.ex.Project_1.repositories.EmployeeRepository;
 import com.ex.Project_1.services.EmployeeService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 /**
  * This class handles web requests for employees

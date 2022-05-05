@@ -16,7 +16,7 @@ spec:
     #depends_on:
     #  - db
   - name: ReimbursementAPI
-    #build: Project_1_ReimbursementAPI
+    #build: Project_1
     image: reimbursement_api:latest
     #container_name: ReimbursementAPI
     ports:

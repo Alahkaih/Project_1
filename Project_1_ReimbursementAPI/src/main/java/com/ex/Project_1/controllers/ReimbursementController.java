@@ -3,7 +3,6 @@ package com.ex.Project_1.controllers;
 import com.ex.Project_1.entities.Employee;
 import com.ex.Project_1.entities.Reimbursement;
 import com.ex.Project_1.exceptions.Reimbursements.ReimbursementNotFoundException;
-import com.ex.Project_1.repositories.ReimbursementRepository;
 import com.ex.Project_1.services.ReimbursementService;
 import lombok.Setter;
 
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Optional;
 
 /**
  * This class handles web requests for reimbursements
@@ -54,11 +52,10 @@ public class ReimbursementController {
         return ResponseEntity.ok(reimbursementService.findAllReimbursementsByEmployeeId(id));
     }
 
-    //TODO Passing but not updating anything
     @PutMapping("manage/{id}")
     public ResponseEntity manageReimbursement(@RequestBody Reimbursement reimbursementData, @PathVariable int id) {
         if(reimbursementService.updateReimbursement(reimbursementData, id)) {
-            return ResponseEntity.ok("Reimbursement successfully updated\n\n" + reimbursementService.findReimbursementById(id));
+            return ResponseEntity.ok("Reimbursement successfully updated");
         } else {
             return ResponseEntity.internalServerError().body("Error managing reimbursement");
         }
