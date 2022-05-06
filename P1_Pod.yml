@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p1pod
+  labels:
+    tier: backend
+    app: webserver
+spec:
+  containers:
+  - name: EmailAPI
+    #build: Project_1_EmailAPI
+    image: email_api:latest
+    #container_name: EmailAPI
+    ports:
+      - containerPort: 8000
+    #depends_on:
+    #  - db
+  - name: ReimbursementAPI
+    #build: Project_1
+    image: reimbursement_api:latest
+    #container_name: ReimbursementAPI
+    ports:
+      - containerPort: 8080
+    #depends_on:
+    #  - db
+  - name: db
+    image: mysql
+    #container_name: db
+    ports:
+      - containerPort: 3306
+    #environment:
+     # - MYSQL_ROOT_PASSWORD=password1!
+    #  - MYSQL_ROOT_USER=root
+  - name: prom
+    image: 'bitnami/prometheus'
+    #container_name: prometheus
+    #volumes:
+     # - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - containerPort: 9090
+  - name: graf
+    image: 'grafana/grafana'
+    #container_name: grafana
+    ports:
+      - containerPort: 3000

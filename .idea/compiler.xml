@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Project_1_EmailAPI" />
+        <module name="Project_1" />
+        <module name="Project_1_ReimbursementAPI" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Project_1" target="8" />
+      <module name="Project_1_EmailAPI" target="1.8" />
+      <module name="Project_1_ReimbursementAPI" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Project_1_EmailAPI" options="-parameters" />
+      <module name="Project_1_ReimbursementAPI" options="-parameters" />
+    </option>
+  </component>
+</project>

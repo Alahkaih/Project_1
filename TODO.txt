@@ -1,0 +1,29 @@
+Reimbursements:
+    FUNCTIONALITY
+        -Send Emails on reimbursement request, approval, denial//
+    LOGGING//
+    JAVADOCS//
+    TESTING
+    FIX UPDATE REIMBURSEMENT//
+    FIX ACTIVE FROM DEFAULTING TO FALSE
+Emails:
+    LOGGING//
+    JAVADOCS//
+    TESTING
+        -create new email
+            -happy path
+            -null receiver
+            -null sender
+        -delete email
+            -happy path
+            -null email
+        -get emails sent
+            -happy path
+            -no sent emails
+        -get emails received
+            -happy path
+            -no received emails
+
+Spring Web RestTemplate:
+    Send Emails in ReimbursementAPI//
+    Verify Employees in EmailAPI//
